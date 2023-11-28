@@ -3,8 +3,8 @@
 A todo-list, powered by a self-made API.
 
 ## Scope
-[Goals](#goals)
-[App Setup](#app-setup)
+[Goals](#goals)<br>
+[App Setup](#app-setup)<br>
 [Tech](#tech)
 
 ### Goals
