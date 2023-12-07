@@ -15,7 +15,9 @@ You need to create your own variables for the prpject to work. The file env.exam
 
 ### Tech
 For this project we used:
-- JavaScript;
-- JSON;
+- HTML
+- CSS
+- JavaScript
+- JSON
 - MySQL
 - Docker
