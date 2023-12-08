@@ -23,6 +23,14 @@ const addTask = async (event) => {
   inputTask.value= '';
 }
 
+const deleteTask = async (id) => {
+  await fetch(`http://localhost:3000/tasks/${id}`, {
+    method: 'delete'
+  });
+
+  loadTasks();
+}
+
 const formateDate = (dateUTC) => {
   const options = { dateStyle: 'long', timeStyle: 'short'}
   const date = new Date(dateUTC).toLocaleString('en',options);
@@ -74,6 +82,9 @@ const createRow = (task) => {
   // add css classes
   editBtn.classList.add('btn-action');
   deleteBtn.classList.add('btn-action');
+
+  // add event listeners
+  deleteBtn.addEventListener('click', () => {deleteTask(id)})
 
   // append elements to specific blocks
   tdStatus.appendChild(select);
