@@ -23,6 +23,12 @@ const addTask = async (event) => {
   inputTask.value= '';
 }
 
+const formateDate = (dateUTC) => {
+  const options = { dateStyle: 'long', timeStyle: 'short'}
+  const date = new Date(dateUTC).toLocaleString('en',options);
+  return date;
+}
+
 const createElement = (tag, innerText = '', innerHTML = '') => {
   const element = document.createElement(tag);
 
@@ -56,7 +62,7 @@ const createRow = (task) => {
 
   // create blocks from row
   const tdTitle = createElement('td', title);
-  const tdCreatedAt = createElement('td', created_at);
+  const tdCreatedAt = createElement('td', formateDate(created_at));
   const tdStatus = createElement('td');
   const tdActions = createElement('td');
 
