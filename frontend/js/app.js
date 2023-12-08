@@ -3,8 +3,8 @@ const addForm = document.querySelector('.add-form');
 const inputTask = document.querySelector('.input-task');
 
 const fetchTasks = async () => {
-  const response = await fetch('http://localhost:3000/tasks');
-  const tasks = await response.json();
+  const response = await fetch('http://localhost:3000/tasks')
+  const tasks = await response.json()
   return tasks;
 }
 
@@ -19,31 +19,46 @@ const addTask = async (event) => {
     body: JSON.stringify(task),
   });
 
+
   loadTasks();
-  inputTask.value= '';
+  inputTask.value = '';
 }
 
 const deleteTask = async (id) => {
   await fetch(`http://localhost:3000/tasks/${id}`, {
-    method: 'delete'
+    method: 'delete',
   });
 
   loadTasks();
 }
 
-const formateDate = (dateUTC) => {
-  const options = { dateStyle: 'long', timeStyle: 'short'}
-  const date = new Date(dateUTC).toLocaleString('en',options);
+const updateTask = async ({ id, title, status }) => {
+
+  await fetch(`http://localhost:3000/tasks/${id}`, {
+    method: 'put',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ title, status })
+  });
+
+  loadTasks();
+}
+
+
+
+const formatDate = (dateUTC) => {
+  const options = { dateStyle: 'long', timeStyle: 'short' };
+  const date = new Date(dateUTC).toLocaleString('pt-br', options);
   return date;
 }
 
 const createElement = (tag, innerText = '', innerHTML = '') => {
   const element = document.createElement(tag);
 
-  if(innerText){
+  if (innerText) {
     element.innerText = innerText;
   }
-  if(innerHTML){
+
+  if (innerHTML) {
     element.innerHTML = innerHTML;
   }
 
@@ -52,17 +67,20 @@ const createElement = (tag, innerText = '', innerHTML = '') => {
 
 const createSelect = (value) => {
   const options = `
-  <option value="in_queue">In Queue</option>
-  <option value="in_progress">In Progress</option>
-  <option value="completed">Completed</option>
+    <option value="pendente">pendente</option>
+    <option value="em andamento">em andamento</option>
+    <option value="concluída">concluída</option>
   `;
-  
+
   const select = createElement('select', '', options);
+
   select.value = value;
+
   return select;
 }
 
 const createRow = (task) => {
+
   const { id, title, created_at, status } = task;
 
   // create a row
@@ -70,26 +88,44 @@ const createRow = (task) => {
 
   // create blocks from row
   const tdTitle = createElement('td', title);
-  const tdCreatedAt = createElement('td', formateDate(created_at));
+  const tdCreatedAt = createElement('td', formatDate(created_at));
   const tdStatus = createElement('td');
   const tdActions = createElement('td');
 
   // create specific elemetns
   const select = createSelect(status);
-  const editBtn = createElement('button', '', '<span class="material-symbols-outlined">edit</span>');
-  const deleteBtn = createElement('button', '', '<span class="material-symbols-outlined">delete</span>');
+
+  select.addEventListener('change', ({ target }) => updateTask({ ...task, status: target.value }));
 
   // add css classes
-  editBtn.classList.add('btn-action');
-  deleteBtn.classList.add('btn-action');
+  const editButton = createElement('button', '', '<span class="material-symbols-outlined">edit</span>');
+  const deleteButton = createElement('button', '', '<span class="material-symbols-outlined">delete</span>');
+  
+  const editForm = createElement('form');
+  const editInput = createElement('input');
 
-  // add event listeners
-  deleteBtn.addEventListener('click', () => {deleteTask(id)})
+  editInput.value = title;
+  editForm.appendChild(editInput);
+  
+  editForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    updateTask({ id, title: editInput.value, status });
+  });
 
+  editButton.addEventListener('click', () => {
+    tdTitle.innerText = '';
+    tdTitle.appendChild(editForm);
+  });
+
+  editButton.classList.add('btn-action');
+  deleteButton.classList.add('btn-action');
+
+  deleteButton.addEventListener('click', () => deleteTask(id));
+  
   // append elements to specific blocks
   tdStatus.appendChild(select);
-  tdActions.appendChild(editBtn);
-  tdActions.appendChild(deleteBtn);
+  tdActions.appendChild(editButton);
+  tdActions.appendChild(deleteButton);
 
   // append elements to row
   tr.appendChild(tdTitle);
@@ -108,8 +144,10 @@ const loadTasks = async () => {
   tasks.forEach((task) => {
     const tr = createRow(task);
     tbody.appendChild(tr);
-  })
+  });
 }
 
+
 addForm.addEventListener('submit', addTask);
+
 loadTasks();
