@@ -65,12 +65,13 @@ const createElement = (tag, innerText = '', innerHTML = '') => {
 
 const createSelect = (value) => {
   const options = `
-    <option value="pendente">pendente</option>
-    <option value="em andamento">em andamento</option>
-    <option value="concluída">concluída</option>
+    <option value="backlog">Backlog</option>
+    <option value="in queue">In Queue</option>
+    <option value="in progress">In Progress</option>
+    <option value="completed">Completed</option>
   `;
 
-  const select = createElement('select', '', options);
+  const select = createElement('select', 'backlog', options);
 
   select.value = value;
 
@@ -127,8 +128,11 @@ const createRow = (task) => {
 
   // append elements to row
   tr.appendChild(tdTitle);
-  tr.appendChild(tdCreatedAt);
+  //tr.appendChild(tdDescription);
+  //tr.appendChild(tdTag);
+  //tr.appendChild(tdUrgencyLevel);
   tr.appendChild(tdStatus);
+  //tr.appendChild(tdDueDate);
   tr.appendChild(tdActions);
 
   return tr;
