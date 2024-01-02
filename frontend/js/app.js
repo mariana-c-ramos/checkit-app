@@ -1,7 +1,6 @@
 const tbody = document.querySelector('tbody');
 const addForm = document.querySelector('.add-form');
 const inputTask = document.querySelector('.input-task');
-const inputDescription = document.querySelector('.input-description');
 
 
 const fetchTasks = async () => {
@@ -14,7 +13,6 @@ const addTask = async (event) => {
   event.preventDefault();
 
   const task = { title: inputTask.value };
-  const description = { description: inputDescription.value };
 
   await fetch('http://localhost:3000/tasks', {
     method: 'post',
@@ -25,7 +23,6 @@ const addTask = async (event) => {
 
   loadTasks();
   inputTask.value = '';
-  inputDescription.value = '';
 }
 
 const deleteTask = async (id) => {
@@ -84,14 +81,13 @@ const createSelect = (value) => {
 
 const createRow = (task) => {
 
-  const { id, title, description, created_at, status } = task;
+  const { id, title, created_at, status } = task;
 
   // create a row
   const tr = createElement('tr');
 
   // create blocks from row
   const tdTitle = createElement('td', title);
-  const tdDescription = createElement('td', description);
   const tdCreatedAt = createElement('td', formatDate(created_at));
   const tdStatus = createElement('td');
   const tdActions = createElement('td');
@@ -133,11 +129,8 @@ const createRow = (task) => {
 
   // append elements to row
   tr.appendChild(tdTitle);
-  tr.appendChild(tdDescription);
-  //tr.appendChild(tdTag);
-  //tr.appendChild(tdUrgencyLevel);
+  tr.appendChild(tdCreatedAt);
   tr.appendChild(tdStatus);
-  //tr.appendChild(tdDueDate);
   tr.appendChild(tdActions);
 
   return tr;
